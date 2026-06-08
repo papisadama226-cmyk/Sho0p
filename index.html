@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="NORDIC">
     
-    <link rel="manifest" href="data:application/manifest+json,{'name':'NORDIC Official Store','short_name':'NORDIC','start_url':'.','display':'standalone','background_color':'#000000','theme_color':'#000000','icons':[{'src':'logo.png.JPG','sizes':'512x512','type':'image/jpeg'}]}">
+    <link rel="manifest" href="data:application/manifest+json,{'name':'NORDIC Official Store','short_name':'NORDIC','start_url':'.','display':'standalone','background_color':'#000000','theme_color':'#000000','icons':[{'src':'logo.png','sizes':'512x512','type':'image/png'}]}">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -178,20 +178,12 @@
         }
 
         function essayerExtensionsSuivantes(img, baseName) {
-            const extensions = [
-                baseName + '.png.JPG',
-                baseName + '.png',
-                baseName + '.jpg.JPG',
-                baseName + '.jpg',
-                baseName + '.JPG',
-                'images/' + baseName + '.png.JPG',
-                'images/' + baseName + '.png'
-            ];
+            const extensions = ['.png', '.jpg', '.JPG'];
             if (!img.dataset.step) img.dataset.step = "0";
             let step = parseInt(img.dataset.step);
             if (step < extensions.length) {
+                img.src = baseName + extensions[step];
                 img.dataset.step = (step + 1).toString();
-                img.src = extensions[step];
             }
         }
     </script>
@@ -237,28 +229,28 @@
     <main class="max-w-5xl mx-auto px-4 pb-24">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div class="group bg-neutral-950/50 p-2 border border-neutral-900 rounded-sm flex flex-col justify-between">
-                <div class="aspect-square bg-neutral-950 overflow-hidden relative flex items-center justify-center rounded-sm"><img src="roses.png.JPG" alt="T-shirt Halftone Roses" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="essayerExtensionsSuivantes(this, 'roses')"/></div>
+                <div class="aspect-square bg-neutral-950 overflow-hidden relative flex items-center justify-center rounded-sm"><img src="roses.png" alt="T-shirt Halftone Roses" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="essayerExtensionsSuivantes(this, 'roses')"/></div>
                 <div class="pt-3 flex flex-col gap-2">
                     <div><h3 class="font-bold text-xs tracking-tight text-neutral-200 truncate">T-Shirt "Halftone Roses"</h3><p class="text-[10px] text-neutral-400 mt-0.5">10 000 FCFA</p></div>
                     <button onclick="ajouterAuPanier('roses', 'T-Shirt Halftone Roses', 10000)" class="w-full bg-white text-black text-[9px] font-black uppercase py-1.5 hover:bg-neutral-200 transition-all cursor-pointer">Prendre</button>
                 </div>
             </div>
             <div class="group bg-neutral-950/50 p-2 border border-neutral-900 rounded-sm flex flex-col justify-between">
-                <div class="aspect-square bg-neutral-950 overflow-hidden relative flex items-center justify-center rounded-sm"><img src="godsplan.png.JPG" alt="T-shirt God's Plan" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="essayerExtensionsSuivantes(this, 'godsplan')"/></div>
+                <div class="aspect-square bg-neutral-950 overflow-hidden relative flex items-center justify-center rounded-sm"><img src="godsplan.png" alt="T-shirt God's Plan" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="essayerExtensionsSuivantes(this, 'godsplan')"/></div>
                 <div class="pt-3 flex flex-col gap-2">
                     <div><h3 class="font-bold text-xs tracking-tight text-neutral-200 truncate">T-Shirt "God's Plan"</h3><p class="text-[10px] text-neutral-400 mt-0.5">10 000 FCFA</p></div>
                     <button onclick="ajouterAuPanier('godsplan', 'T-Shirt God\'s Plan', 10000)" class="w-full bg-white text-black text-[9px] font-black uppercase py-1.5 hover:bg-neutral-200 transition-all cursor-pointer">Prendre</button>
                 </div>
             </div>
             <div class="group bg-neutral-950/50 p-2 border border-neutral-900 rounded-sm flex flex-col justify-between">
-                <div class="aspect-square bg-neutral-950 overflow-hidden relative flex items-center justify-center rounded-sm"><img src="motion.png.JPG" alt="T-shirt Motion Block" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="essayerExtensionsSuivantes(this, 'motion')"/></div>
+                <div class="aspect-square bg-neutral-950 overflow-hidden relative flex items-center justify-center rounded-sm"><img src="motion.png" alt="T-shirt Motion Block" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="essayerExtensionsSuivantes(this, 'motion')"/></div>
                 <div class="pt-3 flex flex-col gap-2">
                     <div><h3 class="font-bold text-xs tracking-tight text-neutral-200 truncate">T-Shirt "Motion Block"</h3><p class="text-[10px] text-neutral-400 mt-0.5">10 000 FCFA</p></div>
                     <button onclick="ajouterAuPanier('motion', 'T-Shirt Motion Block', 10000)" class="w-full bg-white text-black text-[9px] font-black uppercase py-1.5 hover:bg-neutral-200 transition-all cursor-pointer">Prendre</button>
                 </div>
             </div>
             <div class="group bg-neutral-950/50 p-2 border border-neutral-900 rounded-sm flex flex-col justify-between">
-                <div class="aspect-square bg-neutral-950 overflow-hidden relative flex items-center justify-center rounded-sm"><img src="jesus.png.JPG" alt="T-shirt King Jesus" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="essayerExtensionsSuivantes(this, 'jesus')"/></div>
+                <div class="aspect-square bg-neutral-950 overflow-hidden relative flex items-center justify-center rounded-sm"><img src="jesus.png" alt="T-shirt King Jesus" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="essayerExtensionsSuivantes(this, 'jesus')"/></div>
                 <div class="pt-3 flex flex-col gap-2">
                     <div><h3 class="font-bold text-xs tracking-tight text-neutral-200 truncate">T-Shirt "King Jesus"</h3><p class="text-[10px] text-neutral-400 mt-0.5">10 000 FCFA</p></div>
                     <button onclick="ajouterAuPanier('jesus', 'T-Shirt King Jesus', 10000)" class="w-full bg-white text-black text-[9px] font-black uppercase py-1.5 hover:bg-neutral-200 transition-all cursor-pointer">Prendre</button>
@@ -279,4 +271,3 @@
     <footer class="bg-black py-6 text-center text-[10px] text-neutral-700 border-t border-neutral-950"><p>&copy; 2026 NORDIC 👿. All rights reserved.</p></footer>
 </body>
 </html>
-
