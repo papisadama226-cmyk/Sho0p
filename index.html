@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="NORDIC">
     
-    <link rel="manifest" href="data:application/manifest+json,{'name':'NORDIC Official Store','short_name':'NORDIC','start_url':'.','display':'standalone','background_color':'#000000','theme_color':'#000000','icons':[{'src':'https://i.ibb.co/L15XnF5d/roses.png','sizes':'512x512','type':'image/jpeg'}]}">
+    <link rel="manifest" href="data:application/manifest+json,{'name':'NORDIC Official Store','short_name':'NORDIC','start_url':'.','display':'standalone','background_color':'#000000','theme_color':'#000000','icons':[{'src':'https://i.ibb.co/9mMtf0CP/NORDIC-LOGO.png','sizes':'512x512','type':'image/png'}]}">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -259,5 +259,21 @@
     </section>
 
     <footer class="bg-black py-6 text-center text-[10px] text-neutral-700 border-t border-neutral-950"><p>&copy; 2026 NORDIC 👿. All rights reserved.</p></footer>
+
+    <div id="modal-image" class="hidden fixed inset-0 z-[60] bg-black/90 flex items-center justify-center p-4 cursor-pointer" onclick="this.classList.add('hidden')">
+        <img id="image-agrandie" src="" class="max-w-full max-h-full object-contain shadow-2xl" />
+    </div>
+
+    <script>
+        document.querySelectorAll('img').forEach(img => {
+            img.style.cursor = 'pointer';
+            img.addEventListener('click', () => {
+                const modal = document.getElementById('modal-image');
+                const fullImg = document.getElementById('image-agrandie');
+                fullImg.src = img.src;
+                modal.classList.remove('hidden');
+            });
+        });
+    </script>
 </body>
 </html>
