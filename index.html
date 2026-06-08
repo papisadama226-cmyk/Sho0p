@@ -7,16 +7,42 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
         ::-webkit-scrollbar-thumb { background: #262626; border-radius: 2px; }
     </style>
 </head>
 <body class="bg-black text-white font-sans antialiased">
 
     <script>
-        const discordWebhookUrl = "https://discord.com/api/webhooks/1513491854069469317/i3mOtYEw_MU2lorvLKmP-MTxZ479BmZ6oxe5rDV8BOUTyfWGmn90Rs3xZw83ORoRif94";
         const adminWhatsApp = "2250702797128"; 
         let panier = [];
+
+        function majInterfacePanier() {
+            const totalArticles = panier.reduce((total, item) => total + item.quantite, 0);
+            document.getElementById('panier-count').innerText = totalArticles;
+            const listePanierHtml = document.getElementById('liste-panier');
+            const formulaireLivraison = document.getElementById('formulaire-livraison');
+            
+            if (panier.length === 0) {
+                listePanierHtml.innerHTML = '<p class="text-neutral-500 text-xs italic text-center py-6">Votre panier est vide.</p>';
+                document.getElementById('bouton-valider-panier').style.display = 'none';
+                formulaireLivraison.classList.add('hidden');
+            } else {
+                document.getElementById('bouton-valider-panier').style.display = 'block';
+                formulaireLivraison.classList.remove('hidden');
+                let html = '';
+                let totalGlobal = 0;
+                panier.forEach(item => {
+                    totalGlobal += (item.prix * item.quantite);
+                    html += `<div class="flex justify-between items-center border-b border-neutral-900 py-2.5 text-xs">
+                                <div><p class="font-bold text-white">${item.nom}</p><p class="text-[10px] text-neutral-400">${item.prix.toLocaleString()} FCFA</p></div>
+                                <span class="font-black">${(item.prix * item.quantite).toLocaleString()} FCFA</span>
+                            </div>`;
+                });
+                html += `<div class="flex justify-between items-center pt-3 font-black text-sm border-t border-neutral-800 mt-2"><span>TOTAL</span><span>${totalGlobal.toLocaleString()} FCFA</span></div>`;
+                listePanierHtml.innerHTML = html;
+            }
+        }
 
         function ajouterAuPanier(id, nom, prix) {
             const articleExistant = panier.find(item => item.id === id);
@@ -26,64 +52,52 @@
             document.getElementById('modal-panier').classList.remove('hidden');
         }
 
-        function majInterfacePanier() {
-            document.getElementById('panier-count').innerText = panier.reduce((t, i) => t + i.quantite, 0);
-            const list = document.getElementById('liste-panier');
-            let html = '';
-            panier.forEach(item => {
-                html += `<div class="flex justify-between py-2 text-xs border-b border-neutral-900"><span>${item.nom} (x${item.quantite})</span><span class="font-bold">${(item.prix * item.quantite).toLocaleString()} FCFA</span></div>`;
-            });
-            list.innerHTML = html;
-        }
-
         function envoyerCommandeWhatsApp() {
-            if (panier.length === 0) return;
-            let msg = `*COMMANDE NORDIC 👿*\n\n`;
-            panier.forEach(i => msg += `• ${i.nom} (x${i.quantite})\n`);
-            const url = `https://wa.me/${adminWhatsApp}?text=${encodeURIComponent(msg)}`;
-            window.open(url, '_blank');
+            const nom = document.getElementById('client-nom').value.trim();
+            const tel = document.getElementById('client-tel').value.trim();
+            const lieu = document.getElementById('client-lieu').value.trim();
+            const repere = document.getElementById('client-repere').value.trim();
+
+            if (!nom || !tel || !lieu || !repere) { alert("⚠️ Remplissez toutes les infos."); return; }
+
+            let texte = `*🧾 REÇU DE COMMANDE - NORDIC 👿*\n\n👤 *CLIENT :* ${nom}\n📞 *TEL :* ${tel}\n📍 *LIEU :* ${lieu}\n🗺️ *REPÈRES :* ${repere}\n\n🛒 *ARTICLES :*\n`;
+            panier.forEach(i => texte += `• ${i.nom} (x${i.quantite}) - ${(i.prix * i.quantite).toLocaleString()} FCFA\n`);
+            window.open(`https://wa.me/${adminWhatsApp}?text=${encodeURIComponent(texte)}`, '_blank');
         }
     </script>
 
     <nav class="sticky top-0 bg-black border-b border-neutral-900 z-50 h-16 px-6 flex items-center justify-between">
-        <h1 class="text-xl font-black uppercase">NORDIC</h1>
-        <button onclick="document.getElementById('modal-panier').classList.toggle('hidden')" class="relative">🛒<span id="panier-count" class="absolute -top-2 -right-2 bg-white text-black text-[9px] w-4 h-4 rounded-full font-bold">0</span></button>
+        <a href="#" class="text-xl font-black uppercase">NORDIC</a>
+        <button onclick="document.getElementById('modal-panier').classList.remove('hidden')" class="relative">🛒<span id="panier-count" class="absolute -top-1.5 -right-2 bg-white text-black text-[9px] font-black rounded-full w-4 h-4 flex items-center justify-center">0</span></button>
     </nav>
 
-    <header class="py-12 text-center px-4">
-        <h1 class="text-5xl font-serif tracking-widest uppercase">NORDIC</h1>
-        <p class="text-[10px] tracking-widest uppercase text-neutral-400 mt-2">NOT FOR EVERYONE. BUT DO IT FOR YOU.</p>
+    <header class="py-12 text-center px-4 max-w-xl mx-auto">
+        <h1 class="text-5xl font-serif tracking-widest uppercase mb-4">NORDIC</h1>
+        <p class="text-[10px] font-mono tracking-widest uppercase text-neutral-400">NOT FOR EVERYONE. BUT DO IT FOR YOU.</p>
     </header>
 
-    <main class="max-w-4xl mx-auto p-4 grid grid-cols-2 gap-4">
-        <div class="border border-neutral-900 p-2">
-            <img src="roses.png.JPG" class="w-full aspect-square object-cover">
-            <h3 class="text-xs font-bold mt-2">Halftone Roses</h3>
-            <button onclick="ajouterAuPanier('roses','Halftone Roses',10000)" class="w-full bg-white text-black py-2 mt-2 font-bold text-xs">PRENDRE</button>
-        </div>
-        <div class="border border-neutral-900 p-2">
-            <img src="godsplan.png.JPG" class="w-full aspect-square object-cover">
-            <h3 class="text-xs font-bold mt-2">God's Plan</h3>
-            <button onclick="ajouterAuPanier('godsplan','God\'s Plan',10000)" class="w-full bg-white text-black py-2 mt-2 font-bold text-xs">PRENDRE</button>
-        </div>
-        <div class="border border-neutral-900 p-2">
-            <img src="motion.png.JPG" class="w-full aspect-square object-cover">
-            <h3 class="text-xs font-bold mt-2">Motion Block</h3>
-            <button onclick="ajouterAuPanier('motion','Motion Block',10000)" class="w-full bg-white text-black py-2 mt-2 font-bold text-xs">PRENDRE</button>
-        </div>
-        <div class="border border-neutral-900 p-2">
-            <img src="jesus.png.JPG" class="w-full aspect-square object-cover">
-            <h3 class="text-xs font-bold mt-2">King Jesus</h3>
-            <button onclick="ajouterAuPanier('jesus','King Jesus',10000)" class="w-full bg-white text-black py-2 mt-2 font-bold text-xs">PRENDRE</button>
-        </div>
+    <main class="max-w-5xl mx-auto px-4 pb-24 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="border border-neutral-900 p-2"><img src="roses.png.JPG" class="w-full aspect-square object-cover"><div class="pt-3"><h3 class="text-xs font-bold">Halftone Roses</h3><p class="text-[10px] text-neutral-400">10 000 FCFA</p></div><button onclick="ajouterAuPanier('roses', 'Halftone Roses', 10000)" class="w-full bg-white text-black text-[9px] font-black uppercase py-2 mt-2">Prendre</button></div>
+        <div class="border border-neutral-900 p-2"><img src="godsplan.png.JPG" class="w-full aspect-square object-cover"><div class="pt-3"><h3 class="text-xs font-bold">God's Plan</h3><p class="text-[10px] text-neutral-400">10 000 FCFA</p></div><button onclick="ajouterAuPanier('godsplan', 'God\'s Plan', 10000)" class="w-full bg-white text-black text-[9px] font-black uppercase py-2 mt-2">Prendre</button></div>
+        <div class="border border-neutral-900 p-2"><img src="motion.png.JPG" class="w-full aspect-square object-cover"><div class="pt-3"><h3 class="text-xs font-bold">Motion Block</h3><p class="text-[10px] text-neutral-400">10 000 FCFA</p></div><button onclick="ajouterAuPanier('motion', 'Motion Block', 10000)" class="w-full bg-white text-black text-[9px] font-black uppercase py-2 mt-2">Prendre</button></div>
+        <div class="border border-neutral-900 p-2"><img src="jesus.png.JPG" class="w-full aspect-square object-cover"><div class="pt-3"><h3 class="text-xs font-bold">King Jesus</h3><p class="text-[10px] text-neutral-400">10 000 FCFA</p></div><button onclick="ajouterAuPanier('jesus', 'King Jesus', 10000)" class="w-full bg-white text-black text-[9px] font-black uppercase py-2 mt-2">Prendre</button></div>
     </main>
 
-    <div id="modal-panier" class="hidden fixed inset-0 bg-black p-6 z-50">
-        <h2 class="font-bold mb-4">PANIER</h2>
-        <div id="liste-panier"></div>
-        <button onclick="envoyerCommandeWhatsApp()" class="w-full bg-white text-black py-4 mt-6 font-bold">CONFIRMER SUR WHATSAPP</button>
-        <button onclick="document.getElementById('modal-panier').classList.add('hidden')" class="text-neutral-500 mt-4 underline text-xs">Fermer</button>
+    <div id="modal-panier" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex justify-end">
+        <div class="bg-neutral-950 w-full max-w-md h-full p-5 border-l border-neutral-900 flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-center pb-4 border-b border-neutral-900"><h2 class="text-base font-black">VOTRE PANIER</h2><button onclick="document.getElementById('modal-panier').classList.add('hidden')" class="text-neutral-400 text-xs uppercase">Fermer</button></div>
+                <div id="liste-panier" class="mt-2"></div>
+                <div id="formulaire-livraison" class="hidden mt-6 space-y-3">
+                    <h3 class="text-xs uppercase text-neutral-400">📍 Infos de livraison</h3>
+                    <input type="text" id="client-nom" placeholder="Nom complet" class="w-full bg-black border border-neutral-800 p-2 text-xs">
+                    <input type="tel" id="client-tel" placeholder="Numéro WhatsApp" class="w-full bg-black border border-neutral-800 p-2 text-xs">
+                    <input type="text" id="client-lieu" placeholder="Lieu de livraison" class="w-full bg-black border border-neutral-800 p-2 text-xs">
+                    <input type="text" id="client-repere" placeholder="Repères" class="w-full bg-black border border-neutral-800 p-2 text-xs">
+                </div>
+            </div>
+            <button id="bouton-valider-panier" onclick="envoyerCommandeWhatsApp()" class="w-full bg-white text-black font-black uppercase py-4 text-xs">Confirmer & Payer sur WhatsApp</button>
+        </div>
     </div>
-
 </body>
 </html>
