@@ -9,20 +9,20 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="NØRD!C">
-    <link rel="apple-touch-icon" href="godsplan.png.JPG">
     
-    <link rel="manifest" href="data:application/manifest+json,{'name':'NORDIC Official Store','short_name':'NØRD!C','start_url':'.','display':'standalone','background_color':'#000000','theme_color':'#000000','icons':[{'src':'godsplan.png.JPG','sizes':'512x512','type':'image/jpeg'}]}">
+    <link rel="manifest" href="data:application/manifest+json,{'name':'NORDIC Official Store','short_name':'NØRD!C','start_url':'.','display':'standalone','background_color':'#000000','theme_color':'#000000','icons':[{'src':'logo.png.JPG','sizes':'512x512','type':'image/jpeg'}]}">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 2px; }
     </style>
 </head>
 <body class="bg-black text-white font-sans antialiased">
 
     <script>
+        // Enregistrement du Service Worker pour la PWA
         if ('serviceWorker' in navigator) {
             const swCode = `
                 self.addEventListener('install', e => self.skipWaiting());
@@ -31,14 +31,13 @@
             const blob = new Blob([swCode], { type: 'application/javascript' });
             navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(err => console.log(err));
         }
-    </script>
 
-    <script>
         const discordWebhookUrl = "https://discord.com/api/webhooks/1513491854069469317/i3mOtYEw_MU2lorvLKmP-MTxZ479BmZ6oxe5rDV8BOUTyfWGmn90Rs3xZw83ORoRif94";
         const adminWhatsApp = "2250702797128"; 
 
         let panier = [];
 
+        // Alerte visiteur Discord
         window.addEventListener('DOMContentLoaded', () => {
             fetch(discordWebhookUrl, {
                 method: 'POST',
@@ -56,6 +55,7 @@
             majInterfacePanier();
         });
 
+        // Ajouter un article au panier (gère le cumul d'articles multiples)
         function ajouterAuPanier(id, nom, prix) {
             const articleExistant = panier.find(item => item.id === id);
             if (articleExistant) {
@@ -67,49 +67,68 @@
             ouvrirModalPanier(); 
         }
 
+        // Modifier la quantité directement dans le panier
+        function modifierQuantite(id, delta) {
+            const article = panier.find(item => item.id === id);
+            if (article) {
+                article.quantite += delta;
+                if (article.quantite <= 0) {
+                    panier = panier.filter(item => item.id !== id);
+                }
+            }
+            majInterfacePanier();
+        }
+
+        // Met à jour l'interface du panier
         function majInterfacePanier() {
             const totalArticles = panier.reduce((total, item) => total + item.quantite, 0);
             document.getElementById('panier-count').innerText = totalArticles;
             
             const listePanierHtml = document.getElementById('liste-panier');
+            const formulaireLivraison = document.getElementById('formulaire-livraison');
+            
             if (listePanierHtml) {
                 if (panier.length === 0) {
-                    listePanierHtml.innerHTML = '<p class="text-neutral-500 text-sm italic text-center py-8">Votre panier est vide.</p>';
+                    listePanierHtml.innerHTML = '<p class="text-neutral-500 text-xs italic text-center py-6">Votre panier est vide.</p>';
                     document.getElementById('bouton-valider-panier').style.display = 'none';
+                    if (formulaireLivraison) formulaireLivraison.classList.add('hidden');
                 } else {
                     document.getElementById('bouton-valider-panier').style.display = 'block';
+                    if (formulaireLivraison) formulaireLivraison.classList.remove('hidden');
+                    
                     let html = '';
                     let totalGlobal = 0;
+                    
                     panier.forEach(item => {
                         const sousTotal = item.prix * item.quantite;
                         totalGlobal += sousTotal;
                         html += `
-                            <div class="flex justify-between items-center border-b border-neutral-900 py-3 text-sm">
+                            <div class="flex justify-between items-center border-b border-neutral-900 py-2.5 text-xs">
                                 <div>
                                     <p class="font-bold text-white">${item.nom}</p>
-                                    <p class="text-xs text-neutral-400">${item.prix.toLocaleString()} FCFA x ${item.quantite}</p>
+                                    <p class="text-[10px] text-neutral-400">${item.prix.toLocaleString()} FCFA</p>
                                 </div>
                                 <div class="flex items-center gap-3">
-                                    <span class="font-black">${sousTotal.toLocaleString()} FCFA</span>
-                                    <button onclick="retirerDuPanier('${item.id}')" class="text-red-500 hover:text-red-400 text-xs cursor-pointer">X</button>
+                                    <div class="flex items-center border border-neutral-800 rounded bg-black">
+                                        <button onclick="modifierQuantite('${item.id}', -1)" class="px-1.5 py-0.5 text-neutral-400 hover:text-white font-bold cursor-pointer">-</button>
+                                        <span class="px-1 text-[10px] font-mono">${item.quantite}</span>
+                                        <button onclick="modifierQuantite('${item.id}', 1)" class="px-1.5 py-0.5 text-neutral-400 hover:text-white font-bold cursor-pointer">+</button>
+                                    </div>
+                                    <span class="font-black text-white text-right min-w-[65px]">${sousTotal.toLocaleString()} FCFA</span>
                                 </div>
                             </div>
                         `;
                     });
+                    
                     html += `
-                        <div class="flex justify-between items-center pt-4 font-black text-base">
-                            <span>TOTAL :</span>
-                            <span class="text-white">${totalGlobal.toLocaleString()} FCFA</span>
+                        <div class="flex justify-between items-center pt-3 font-black text-sm border-t border-neutral-800 mt-2">
+                            <span class="text-neutral-400">TOTAL :</span>
+                            <span class="text-white text-base">${totalGlobal.toLocaleString()} FCFA</span>
                         </div>
                     `;
                     listePanierHtml.innerHTML = html;
                 }
             }
-        }
-
-        function retirerDuPanier(id) {
-            panier = panier.filter(item => item.id !== id);
-            majInterfacePanier();
         }
 
         function ouvrirModalPanier() {
@@ -120,31 +139,50 @@
             document.getElementById('modal-panier').classList.add('hidden');
         }
 
+        // Envoyer la commande avec le reçu complet contenant les infos du client
         function envoyerCommandeWhatsApp() {
             if (panier.length === 0) return;
 
+            const nomClient = document.getElementById('client-nom').value.trim();
+            const telClient = document.getElementById('client-tel').value.trim();
+            const lieuClient = document.getElementById('client-lieu').value.trim();
+            const repereClient = document.getElementById('client-repere').value.trim();
+
+            if (!nomClient || !telClient || !lieuClient || !repereClient) {
+                alert("⚠️ S'il vous plaît, remplissez toutes vos informations de livraison avant de passer la commande.");
+                return;
+            }
+
             let totalGlobal = 0;
-            let texteRecu = `*🧾 REÇU DE COMMANDE - 𝐍𝑂𝐑𝐷𝐈𝐂 👿*\n`;
-            texteRecu += `----------------------------------\n\n`;
+            let texteRecu = `*🧾 REÇU DE COMMANDE - 𝐍O𝐑𝐃I C 👿*\n`;
+            texteRecu += `------------------------------------------\n\n`;
+            
+            texteRecu += `👤 *CLIENT :* ${nomClient}\n`;
+            texteRecu += `📞 *TEL :* ${telClient}\n`;
+            texteRecu += `📍 *LIEU :* ${lieuClient}\n`;
+            texteRecu += `🗺️ *REPÈRES :* ${repereClient}\n\n`;
+            texteRecu += `------------------------------------------\n`;
+            texteRecu += `🛒 *ARTICLES COMMANDÉS :*\n\n`;
             
             panier.forEach(item => {
                 const sousTotal = item.prix * item.quantite;
                 totalGlobal += sousTotal;
-                texteRecu += `• *${item.nom}*\n  Quantité : ${item.quantite}\n  Prix : ${sousTotal.toLocaleString()} FCFA\n\n`;
+                texteRecu += `• *${item.nom}*\n  Quantité : ${item.quantite} | Prix : ${sousTotal.toLocaleString()} FCFA\n\n`;
             });
 
-            texteRecu += `----------------------------------\n`;
-            texteRecu += `*💰 TOTAL À PAYER : ${totalGlobal.toLocaleString()} FCFA*\n\n`;
-            texteRecu += `_Veuillez m'indiquer votre adresse de livraison suite à ce message._`;
+            texteRecu += `------------------------------------------\n`;
+            texteRecu += `*💰 TOTAL GLOBAL : ${totalGlobal.toLocaleString()} FCFA*\n\n`;
+            texteRecu += `_Commande générée depuis la boutique en ligne._`;
 
+            // Log Discord de sécurité
             fetch(discordWebhookUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     username: "N-D_bot👿",
                     embeds: [{
-                        title: "🛒 Achat lancé sur WhatsApp !",
-                        description: `Un panier d'une valeur de **${totalGlobal.toLocaleString()} FCFA** est envoyé à l'admin.`,
+                        title: "🛒 Nouvelle commande WhatsApp reçue !",
+                        description: `Client: **${nomClient}**\nMontant total: **${totalGlobal.toLocaleString()} FCFA**`,
                         color: 15158332,
                         timestamp: new Date().toISOString()
                     }]
@@ -154,24 +192,38 @@
             const urlWhatsApp = `https://wa.me/${adminWhatsApp}?text=${encodeURIComponent(texteRecu)}`;
             window.open(urlWhatsApp, '_blank');
         }
+
+        // Système de secours en cascade pour l'affichage des extensions d'images
+        function essayerExtensionsSuivantes(img, baseName) {
+            const extensions = [
+                baseName + '.png.JPG',
+                baseName + '.png',
+                baseName + '.jpg.JPG',
+                baseName + '.jpg',
+                baseName + '.JPG',
+                'images/' + baseName + '.png.JPG',
+                'images/' + baseName + '.png',
+                'images/' + baseName + '.JPG'
+            ];
+            if (!img.dataset.step) img.dataset.step = "0";
+            let step = parseInt(img.dataset.step);
+            if (step < extensions.length) {
+                img.dataset.step = (step + 1).toString();
+                img.src = extensions[step];
+            }
+        }
     </script>
 
-    <nav class="sticky top-0 bg-black border-b border-neutral-900 z-50 h-16 px-6 md:px-12 flex items-center justify-between">
-        <a href="#" class="flex items-center">
-            <span class="text-2xl font-serif tracking-widest font-black uppercase text-white">NØRD!C</span>
+    <nav class="sticky top-0 bg-black border-b border-neutral-900 z-50 h-16 px-4 md:px-12 flex items-center justify-between">
+        <a href="#" class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-white overflow-hidden flex items-center justify-center p-0.5">
+                <img src="logo.png.JPG" alt="Fleur Logo" class="w-full h-full object-contain" onerror="essayerExtensionsSuivantes(this, 'logo')"/>
+            </div>
+            <span class="text-lg font-serif tracking-widest font-black uppercase text-white">NØRD!C</span>
         </a>
 
-        <div class="hidden md:flex items-center gap-8 text-xs font-mono tracking-widest uppercase text-neutral-400">
-            <a href="#" class="hover:text-white transition-colors">Collections</a>
-            <a href="#" class="hover:text-white transition-colors">Nouveautés</a>
-            <a href="#" class="hover:text-white transition-colors">L'univers</a>
-        </div>
-
         <div class="flex items-center gap-6 text-neutral-400">
-            <button class="hover:text-white transition-colors">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            </button>
-            <button onclick="ouvrirModalPanier()" class="hover:text-white transition-colors relative flex items-center">
+            <button onclick="ouvrirModalPanier()" class="hover:text-white transition-colors relative flex items-center cursor-pointer">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
                 <span id="panier-count" class="absolute -top-1.5 -right-2.5 bg-white text-black text-[9px] font-black rounded-full w-4 h-4 flex items-center justify-center">0</span>
             </button>
@@ -179,84 +231,108 @@
     </nav>
 
     <div id="modal-panier" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex justify-end">
-        <div class="bg-neutral-950 w-full max-w-md h-full p-6 border-l border-neutral-900 flex flex-col justify-between">
+        <div class="bg-neutral-950 w-full max-w-md h-full p-5 border-l border-neutral-900 flex flex-col justify-between overflow-y-auto">
             <div>
-                <div class="flex justify-between items-center pb-6 border-b border-neutral-900">
-                    <h2 class="text-xl font-serif font-black tracking-tight">VOTRE PANIER</h2>
-                    <button onclick="fermerModalPanier()" class="text-neutral-400 hover:text-white font-mono text-sm uppercase">Fermer</button>
+                <div class="flex justify-between items-center pb-4 border-b border-neutral-900">
+                    <h2 class="text-base font-serif font-black tracking-tight">VOTRE PANIER</h2>
+                    <button onclick="fermerModalPanier()" class="text-neutral-400 hover:text-white font-mono text-xs uppercase cursor-pointer">Fermer</button>
                 </div>
-                <div id="liste-panier" class="mt-4 overflow-y-auto max-h-[60vh]"></div>
+                
+                <div id="liste-panier" class="mt-2 max-h-[30vh] overflow-y-auto"></div>
+
+                <div id="formulaire-livraison" class="hidden mt-6 pt-4 border-t border-neutral-900 space-y-3">
+                    <h3 class="text-xs font-mono uppercase tracking-wider text-neutral-400 mb-2">📍 Informations de livraison</h3>
+                    <div>
+                        <label class="block text-[10px] uppercase text-neutral-500 mb-1">Nom & Prénom *</label>
+                        <input type="text" id="client-nom" placeholder="Ex: Kouassi Konan" class="w-full bg-black border border-neutral-800 rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-white">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase text-neutral-500 mb-1">Numéro joignable *</label>
+                        <input type="tel" id="client-tel" placeholder="Ex: 0707XXXXXX" class="w-full bg-black border border-neutral-800 rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-white">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase text-neutral-500 mb-1">Lieu de livraison *</label>
+                        <input type="text" id="client-lieu" placeholder="Ex: Angré Cocody" class="w-full bg-black border border-neutral-800 rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-white">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase text-neutral-500 mb-1">Repères pour le livreur *</label>
+                        <input type="text" id="client-repere" placeholder="Ex: Près de la pharmacie ou station" class="w-full bg-black border border-neutral-800 rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-white">
+                    </div>
+                </div>
             </div>
-            <button id="bouton-valider-panier" onclick="envoyerCommandeWhatsApp()" class="w-full bg-white text-black font-black uppercase py-4 tracking-wider text-xs hover:bg-neutral-200 transition-all">
-                💬 Payer sur WhatsApp
+            
+            <button id="bouton-valider-panier" onclick="envoyerCommandeWhatsApp()" class="w-full bg-white text-black font-black uppercase py-3.5 tracking-wider text-xs hover:bg-neutral-200 transition-all mt-6 cursor-pointer">
+                💬 Confirmer & Payer sur WhatsApp
             </button>
         </div>
     </div>
 
-    <header class="py-20 text-center px-4 max-w-4xl mx-auto">
-        <h1 class="text-5xl md:text-7xl font-serif font-black tracking-tighter uppercase mb-4">𝐍O𝐑𝐃I C</h1>
-        <p class="text-xs md:text-sm font-mono tracking-widest uppercase text-neutral-500">Not for everyone. But do it for you.</p>
-        <div class="w-12 h-[1px] bg-neutral-800 mx-auto mt-6"></div>
+    <header class="py-12 text-center px-4 max-w-xl mx-auto flex flex-col items-center">
+        <div class="w-16 h-16 rounded-full bg-white overflow-hidden p-1 mb-4 shadow-xl">
+            <img src="logo.png.JPG" alt="NORDIC Fleur Logo" class="w-full h-full object-contain" onerror="essayerExtensionsSuivantes(this, 'logo')"/>
+        </div>
+        <h1 class="text-4xl font-serif font-black tracking-tighter uppercase mb-2">𝐍O𝐑𝐃I C</h1>
+        <p class="text-[10px] font-mono tracking-widest uppercase text-neutral-500">Not for everyone. But do it for you.</p>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 md:px-12 pb-32">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <main class="max-w-5xl mx-auto px-4 pb-24">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             
-            <div class="group flex flex-col justify-between">
-                <div class="aspect-square bg-neutral-950 overflow-hidden relative border border-neutral-900 p-2 rounded-sm flex items-center justify-center">
-                    <img src="roses.png.JPG" alt="T-shirt Halftone Roses" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500" onerror="this.src='roses.png'"/>
+            <div class="group bg-neutral-950/50 p-2 border border-neutral-900 rounded-sm flex flex-col justify-between">
+                <div class="aspect-square bg-neutral-950 overflow-hidden relative flex items-center justify-center rounded-sm">
+                    <img src="roses.png.JPG" alt="T-shirt Halftone Roses" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="essayerExtensionsSuivantes(this, 'roses')"/>
                 </div>
-                <div class="pt-4 flex justify-between items-start">
+                <div class="pt-3 flex flex-col gap-2">
                     <div>
-                        <h3 class="font-bold text-sm tracking-tight">T-Shirt "Halftone Roses"</h3>
-                        <p class="text-xs text-neutral-400 mt-0.5">10 000 FCFA</p>
+                        <h3 class="font-bold text-xs tracking-tight text-neutral-200 truncate">Halftone Roses</h3>
+                        <p class="text-[10px] text-neutral-400 mt-0.5">10 000 FCFA</p>
                     </div>
-                    <button onclick="ajouterAuPanier('roses', 'T-Shirt Halftone Roses', 10000)" class="bg-white text-black text-[10px] font-bold uppercase px-3 py-2 hover:bg-neutral-200 transition-all">
+                    <button onclick="ajouterAuPanier('roses', 'T-Shirt Halftone Roses', 10000)" class="w-full bg-white text-black text-[9px] font-black uppercase py-1.5 hover:bg-neutral-200 transition-all cursor-pointer">
                         Prendre
                     </button>
                 </div>
             </div>
 
-            <div class="group flex flex-col justify-between">
-                <div class="aspect-square bg-neutral-950 overflow-hidden relative border border-neutral-900 p-2 rounded-sm flex items-center justify-center">
-                    <img src="godsplan.png.JPG" alt="T-shirt God's Plan" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500" onerror="this.src='godsplan.png'"/>
+            <div class="group bg-neutral-950/50 p-2 border border-neutral-900 rounded-sm flex flex-col justify-between">
+                <div class="aspect-square bg-neutral-950 overflow-hidden relative flex items-center justify-center rounded-sm">
+                    <img src="godsplan.png.JPG" alt="T-shirt God's Plan" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="essayerExtensionsSuivantes(this, 'godsplan')"/>
                 </div>
-                <div class="pt-4 flex justify-between items-start">
+                <div class="pt-3 flex flex-col gap-2">
                     <div>
-                        <h3 class="font-bold text-sm tracking-tight">T-Shirt "God's Plan"</h3>
-                        <p class="text-xs text-neutral-400 mt-0.5">10 000 FCFA</p>
+                        <h3 class="font-bold text-xs tracking-tight text-neutral-200 truncate">God's Plan</h3>
+                        <p class="text-[10px] text-neutral-400 mt-0.5">10 000 FCFA</p>
                     </div>
-                    <button onclick="ajouterAuPanier('godsplan', 'T-Shirt God\'s Plan', 10000)" class="bg-white text-black text-[10px] font-bold uppercase px-3 py-2 hover:bg-neutral-200 transition-all">
+                    <button onclick="ajouterAuPanier('godsplan', 'T-Shirt God\'s Plan', 10000)" class="w-full bg-white text-black text-[9px] font-black uppercase py-1.5 hover:bg-neutral-200 transition-all cursor-pointer">
                         Prendre
                     </button>
                 </div>
             </div>
 
-            <div class="group flex flex-col justify-between">
-                <div class="aspect-square bg-neutral-950 overflow-hidden relative border border-neutral-900 p-2 rounded-sm flex items-center justify-center">
-                    <img src="motion.png.JPG" alt="T-shirt Motion Block" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500" onerror="this.src='motion.png'"/>
+            <div class="group bg-neutral-950/50 p-2 border border-neutral-900 rounded-sm flex flex-col justify-between">
+                <div class="aspect-square bg-neutral-950 overflow-hidden relative flex items-center justify-center rounded-sm">
+                    <img src="motion.png.JPG" alt="T-shirt Motion Block" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="essayerExtensionsSuivantes(this, 'motion')"/>
                 </div>
-                <div class="pt-4 flex justify-between items-start">
+                <div class="pt-3 flex flex-col gap-2">
                     <div>
-                        <h3 class="font-bold text-sm tracking-tight">T-Shirt "Motion Block"</h3>
-                        <p class="text-xs text-neutral-400 mt-0.5">10 000 FCFA</p>
+                        <h3 class="font-bold text-xs tracking-tight text-neutral-200 truncate">Motion Block</h3>
+                        <p class="text-[10px] text-neutral-400 mt-0.5">10 000 FCFA</p>
                     </div>
-                    <button onclick="ajouterAuPanier('motion', 'T-Shirt Motion Block', 10000)" class="bg-white text-black text-[10px] font-bold uppercase px-3 py-2 hover:bg-neutral-200 transition-all">
+                    <button onclick="ajouterAuPanier('motion', 'T-Shirt Motion Block', 10000)" class="w-full bg-white text-black text-[9px] font-black uppercase py-1.5 hover:bg-neutral-200 transition-all cursor-pointer">
                         Prendre
                     </button>
                 </div>
             </div>
 
-            <div class="group flex flex-col justify-between">
-                <div class="aspect-square bg-neutral-950 overflow-hidden relative border border-neutral-900 p-2 rounded-sm flex items-center justify-center">
-                    <img src="jesus.png.JPG" alt="T-shirt King Jesus" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500" onerror="this.src='jesus.png'"/>
+            <div class="group bg-neutral-950/50 p-2 border border-neutral-900 rounded-sm flex flex-col justify-between">
+                <div class="aspect-square bg-neutral-950 overflow-hidden relative flex items-center justify-center rounded-sm">
+                    <img src="jesus.png.JPG" alt="T-shirt King Jesus" class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="essayerExtensionsSuivantes(this, 'jesus')"/>
                 </div>
-                <div class="pt-4 flex justify-between items-start">
+                <div class="pt-3 flex flex-col gap-2">
                     <div>
-                        <h3 class="font-bold text-sm tracking-tight">T-Shirt "King Jesus"</h3>
-                        <p class="text-xs text-neutral-400 mt-0.5">10 000 FCFA</p>
+                        <h3 class="font-bold text-xs tracking-tight text-neutral-200 truncate">King Jesus</h3>
+                        <p class="text-[10px] text-neutral-400 mt-0.5">10 000 FCFA</p>
                     </div>
-                    <button onclick="ajouterAuPanier('jesus', 'T-Shirt King Jesus', 10000)" class="bg-white text-black text-[10px] font-bold uppercase px-3 py-2 hover:bg-neutral-200 transition-all">
+                    <button onclick="ajouterAuPanier('jesus', 'T-Shirt King Jesus', 10000)" class="w-full bg-white text-black text-[9px] font-black uppercase py-1.5 hover:bg-neutral-200 transition-all cursor-pointer">
                         Prendre
                     </button>
                 </div>
@@ -265,18 +341,18 @@
         </div>
     </main>
 
-    <section class="bg-neutral-950 border-t border-neutral-900 py-16 px-4 text-center">
-        <div class="max-w-2xl mx-auto">
-            <span class="text-xs font-mono tracking-widest text-neutral-600 uppercase">Inspired By Vision</span>
-            <h2 class="text-2xl font-serif tracking-wide font-light text-neutral-300 mt-2 mb-4">GNAGRE ANDRÉ</h2>
-            <p class="text-sm text-neutral-500 italic font-light leading-relaxed">
+    <section class="bg-neutral-950 border-t border-neutral-900 py-12 px-4 text-center">
+        <div class="max-w-xl mx-auto">
+            <span class="text-[10px] font-mono tracking-widest text-neutral-600 uppercase">Inspired By Vision</span>
+            <h2 class="text-xl font-serif tracking-wide font-light text-neutral-300 mt-2 mb-3">GNAGRE ANDRÉ</h2>
+            <p class="text-xs text-neutral-500 italic font-light leading-relaxed">
                 "À l'esprit brillant derrière les croquis, à l'audace et à la créativité pure qui font vibrer l'âme de cette marque. Ton art et ta vision continuent de vivre à travers chaque pièce et chaque détail de 𝐍𝑂𝐑𝐷𝐈𝐂."
             </p>
-            <div class="text-[10px] font-mono text-neutral-700 uppercase tracking-widest mt-6">Active Creator • 𝐍-𝐃</div>
+            <div class="text-[9px] font-mono text-neutral-700 uppercase tracking-widest mt-4">Active Creator • 𝐍-𝐃</div>
         </div>
     </section>
 
-    <footer class="bg-black py-8 text-center text-xs text-neutral-700 border-t border-neutral-950">
+    <footer class="bg-black py-6 text-center text-[10px] text-neutral-700 border-t border-neutral-950">
         <p>&copy; 2026 𝐍𝑂𝐑𝐷𝐈𝐂 👿. All rights reserved.</p>
     </footer>
 
