@@ -3,24 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NORDIC 👿 | Official Shop</title>
+    <title>𝐍𝑂𝐑𝐃𝐈𝐂 👿 | Official Store</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.4.1/default/snipcart.css" />
     <style>
-        /* Personnalisation de la scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #404040; }
+        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 3px; }
     </style>
 </head>
-<body class="bg-neutral-950 text-white font-sans antialiased">
+<body class="bg-black text-white font-sans antialiased">
 
     <script>
         const discordWebhookUrl = "https://discord.com/api/webhooks/1513491854069469317/i3mOtYEw_MU2lorvLKmP-MTxZ479BmZ6oxe5rDV8BOUTyfWGmn90Rs3xZw83ORoRif94";
         const adminContact = "+2250702797128";
 
-        // 1. Alerte de connexion simple au chargement du site
         window.addEventListener('DOMContentLoaded', () => {
             fetch(discordWebhookUrl, {
                 method: 'POST',
@@ -29,182 +26,151 @@
                     username: "N-D_bot👿",
                     embeds: [{
                         title: "🚨 Alerte Visiteur !",
-                        description: "Un utilisateur vient d'arriver sur le site NORDIC !",
-                        color: 3092790, // Gris foncé cyberpunk
+                        description: "Un utilisateur vient d'arriver sur le site 𝐍𝑂𝐑𝐃𝐈𝐂 !",
+                        color: 0,
                         timestamp: new Date().toISOString()
                     }]
                 })
-            }).catch(err => console.log("Erreur alerte visiteur"));
+            }).catch(err => console.log("Erreur Discord"));
         });
 
-        // 2. Écouteur Snipcart : Envoi automatique du reçu complet lors d'un achat réussi
         document.addEventListener('snipcart.ready', () => {
             Snipcart.events.on('order.completed', function (order) {
-                
-                // Extraction des détails du client
                 const customerName = order.billingAddress.name || "Non renseigné";
-                const shippingAddress = `${order.shippingAddress.address1}, ${order.shippingAddress.city}, ${order.shippingAddress.country}`;
-                const orderId = order.token;
-                const totalAmount = order.total.toLocaleString() + " FCFA";
-                
-                // Listing des articles achetés
+                const shippingAddress = `${order.shippingAddress.address1}, ${order.shippingAddress.city}`;
                 let itemsList = "";
-                order.items.items.forEach(item => {
-                    itemsList += `• ${item.name} (Qté: ${item.quantity})\n`;
-                });
+                order.items.items.forEach(item => { itemsList += `• ${item.name} (Qté: ${item.quantity})\n`; });
 
-                // Construction de l'encart d'alerte pour ton Discord
-                const discordPayload = {
-                    username: "N-D_bot👿",
-                    embeds: [{
-                        title: "💰 NOUVELLE COMMANDE REÇUE ! 💰",
-                        description: `Un reçu complet a été généré pour l'administrateur (${adminContact}).`,
-                        color: 15158332, // Rouge alerte
-                        fields: [
-                            { name: "👤 Nom du client", value: customerName, inline: true },
-                            { name: "📍 Adresse de livraison", value: shippingAddress, inline: false },
-                            { name: "📦 Articles commandés", value: itemsList || "Aucun article extrait", inline: false },
-                            { name: "💵 Total payé", value: totalAmount, inline: true },
-                            { name: "🆔 ID Commande Snipcart", value: orderId, inline: false }
-                        ],
-                        timestamp: new Date().toISOString(),
-                        footer: { text: "NORDIC Shop System" }
-                    }]
-                };
-
-                // Envoi des données vers ton salon Discord
                 fetch(discordWebhookUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(discordPayload)
-                }).catch(err => console.error("Erreur d'envoi du reçu à Discord:", err));
+                    body: JSON.stringify({
+                        username: "N-D_bot👿",
+                        embeds: [{
+                            title: "💰 NOUVELLE COMMANDE REÇUE !",
+                            color: 15158332,
+                            fields: [
+                                { name: "👤 Client", value: customerName, inline: true },
+                                { name: "📍 Adresse", value: shippingAddress, inline: true },
+                                { name: "📦 Articles", value: itemsList }
+                            ],
+                            timestamp: new Date().toISOString()
+                        }]
+                    })
+                }).catch(err => console.error(err));
             });
         });
     </script>
 
-    <nav class="border-b border-neutral-800 bg-neutral-950/80 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="#" class="text-2xl font-black tracking-tighter uppercase flex items-center gap-1">
-                NØRD!C <span class="text-xs text-neutral-500 font-normal">👿</span>
-            </a>
-            
-            <div class="flex items-center gap-6">
-                <a href="https://wa.me/2250702797128" target="_blank" class="text-sm text-neutral-400 hover:text-white transition-colors font-medium flex items-center gap-1">
-                    <span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span> Contact Admin
-                </a>
-                <button class="snipcart-checkout flex items-center gap-2 bg-white text-black px-5 py-2.5 rounded-full font-bold text-sm hover:bg-neutral-200 transition-all shadow-lg">
-                    <span>Panier</span>
-                    <span class="snipcart-items-count bg-black text-white text-xs px-2 py-0.5 rounded-full font-black">0</span>
-                </button>
-            </div>
+    <nav class="sticky top-0 bg-black border-b border-neutral-900 z-50 h-16 px-4 md:px-12 flex items-center justify-between">
+        <a href="#" class="flex items-center">
+            <img src="images/logo.png" alt="𝐍𝑂𝐑𝐃𝐈𝐂" class="h-7 object-contain invert" onerror="this.style.display='none'; document.getElementById('logo-text').style.display='block';"/>
+            <span id="logo-text" class="hidden text-xl font-serif tracking-widest font-black">𝐍𝑂𝐑𝐃𝐈𝐂</span>
+        </a>
+
+        <div class="flex items-center gap-6 text-neutral-400">
+            <button class="hover:text-white transition-colors cursor-pointer">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </button>
+            <button class="hover:text-white transition-colors cursor-pointer">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            </button>
+            <button class="snipcart-checkout hover:text-white transition-colors cursor-pointer relative flex items-center">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                <span class="snipcart-items-count absolute -top-1 -right-2 bg-white text-black text-[10px] font-black rounded-full px-1.5 py-0.2">0</span>
+            </button>
         </div>
     </nav>
 
-    <header class="py-20 text-center max-w-3xl mx-auto px-6">
-        <span class="text-xs font-bold uppercase tracking-widest text-neutral-500 bg-neutral-900 border border-neutral-800 px-3 py-1 rounded-full">Drop Original Collection</span>
-        <h1 class="text-5xl md:text-7xl font-black mt-4 mb-6 tracking-tighter uppercase bg-gradient-to-r from-white via-neutral-200 to-neutral-500 bg-clip-text text-transparent">ALL IN GOD'S PLAN</h1>
-        <p class="text-neutral-400 text-lg md:text-xl font-light">Édition limitée. Coupe premium, designs underground sérigraphiés. Prix unique : 10 000 FCFA.</p>
+    <header class="py-24 text-center px-4 max-w-4xl mx-auto">
+        <h1 class="text-6xl md:text-8xl font-serif font-black tracking-tighter uppercase mb-4">𝐍𝑂𝐑𝐃𝐈𝐂</h1>
+        <p class="text-sm md:text-base font-mono tracking-widest uppercase text-neutral-400 mb-2">Not for everyone. But do it for you.</p>
+        <div class="w-12 h-[1px] bg-neutral-800 mx-auto mt-6"></div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 pb-24">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <main class="max-w-7xl mx-auto px-4 md:px-12 pb-32">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             
-            <div class="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden group hover:border-neutral-700 transition-all duration-300">
-                <div class="aspect-square bg-white flex items-center justify-center p-4 overflow-hidden relative">
-                    <img src="https://i.ibb.co/VWV3WffM/roses-mockup.png" alt="T-shirt Three Roses Concept" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
-                    <span class="absolute top-4 left-4 bg-black border border-neutral-800 text-white text-xs font-bold uppercase px-3 py-1 rounded-full">New</span>
+            <div class="group flex flex-col justify-between">
+                <div class="aspect-square bg-neutral-900 overflow-hidden relative rounded-sm">
+                    <img src="images/roses.png" alt="T-shirt Halftone Roses" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold tracking-tight">T-Shirt "Three Roses"</h3>
-                    <p class="text-neutral-400 text-sm mt-1">Illustration fleurs tricolores en Halftone au centre.</p>
-                    <div class="mt-6 flex items-center justify-between">
-                        <span class="text-2xl font-black tracking-tight">10 000 FCFA</span>
-                        <button class="snipcart-add-item bg-white text-black px-5 py-3 rounded-xl font-black text-xs uppercase hover:bg-neutral-200 transition-all"
-                            data-item-id="nordic-three-roses"
-                            data-item-name="T-Shirt Three Roses"
-                            data-item-price="10000"
-                            data-item-url="/"
-                            data-item-description="T-shirt blanc avec trois roses stylisées."
-                            data-item-image="https://i.ibb.co/VWV3WffM/roses-mockup.png">
-                            Ajouter au panier
-                        </button>
+                <div class="pt-4 flex justify-between items-start">
+                    <div>
+                        <h3 class="font-bold text-sm tracking-tight">T-Shirt "Halftone Roses"</h3>
+                        <p class="text-xs text-neutral-500 mt-0.5">10 000 FCFA</p>
                     </div>
+                    <button class="snipcart-add-item bg-white text-black text-[10px] font-bold uppercase px-3 py-2 rounded-none hover:bg-neutral-200 transition-all cursor-pointer"
+                        data-item-id="nordic-halftone-roses" data-item-name="T-Shirt Halftone Roses" data-item-price="10000" data-item-url="/" data-item-image="images/roses.png">
+                        Prendre
+                    </button>
                 </div>
             </div>
 
-            <div class="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden group hover:border-neutral-700 transition-all duration-300">
-                <div class="aspect-square bg-white flex items-center justify-center p-4 overflow-hidden relative">
-                    <img src="https://i.ibb.co/6RRLrR2Z/godsplan-mockup.png" alt="T-shirt All In God's Plan" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
+            <div class="group flex flex-col justify-between">
+                <div class="aspect-square bg-neutral-900 overflow-hidden relative rounded-sm">
+                    <img src="images/godsplan.png" alt="T-shirt God's Plan" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold tracking-tight">T-Shirt "God's Plan"</h3>
-                    <p class="text-neutral-400 text-sm mt-1">Logo cursif avec étoile bleue (dos) & typographie dollars.</p>
-                    <div class="mt-6 flex items-center justify-between">
-                        <span class="text-2xl font-black tracking-tight">10 000 FCFA</span>
-                        <button class="snipcart-add-item bg-white text-black px-5 py-3 rounded-xl font-black text-xs uppercase hover:bg-neutral-200 transition-all"
-                            data-item-id="nordic-gods-plan"
-                            data-item-name="T-Shirt All In God's Plan"
-                            data-item-price="10000"
-                            data-item-url="/"
-                            data-item-description="T-shirt blanc écriture cursive étoile bleue et motif dollar."
-                            data-item-image="https://i.ibb.co/6RRLrR2Z/godsplan-mockup.png">
-                            Ajouter au panier
-                        </button>
+                <div class="pt-4 flex justify-between items-start">
+                    <div>
+                        <h3 class="font-bold text-sm tracking-tight">T-Shirt "God's Plan"</h3>
+                        <p class="text-xs text-neutral-500 mt-0.5">10 000 FCFA</p>
                     </div>
+                    <button class="snipcart-add-item bg-white text-black text-[10px] font-bold uppercase px-3 py-2 rounded-none hover:bg-neutral-200 transition-all cursor-pointer"
+                        data-item-id="nordic-gods-plan" data-item-name="T-Shirt God's Plan" data-item-price="10000" data-item-url="/" data-item-image="images/godsplan.png">
+                        Prendre
+                    </button>
                 </div>
             </div>
 
-            <div class="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden group hover:border-neutral-700 transition-all duration-300">
-                <div class="aspect-square bg-white flex items-center justify-center p-4 overflow-hidden relative">
-                    <img src="https://i.ibb.co/7dbyYgPy/glitch-nordic-mockup.png" alt="T-shirt Nordic Motion Block" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
+            <div class="group flex flex-col justify-between">
+                <div class="aspect-square bg-neutral-900 overflow-hidden relative rounded-sm">
+                    <img src="images/motion.png" alt="T-shirt Motion Block" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold tracking-tight">T-Shirt "Motion Block"</h3>
-                    <p class="text-neutral-400 text-sm mt-1">Visuel visage flouté artistique et énorme bloc NORDIC.</p>
-                    <div class="mt-6 flex items-center justify-between">
-                        <span class="text-2xl font-black tracking-tight">10 000 FCFA</span>
-                        <button class="snipcart-add-item bg-white text-black px-5 py-3 rounded-xl font-black text-xs uppercase hover:bg-neutral-200 transition-all"
-                            data-item-id="nordic-motion-block"
-                            data-item-name="T-Shirt Nordic Motion Block"
-                            data-item-price="10000"
-                            data-item-url="/"
-                            data-item-description="T-shirt blanc avec portrait abstrait flouté et lettrage imposant."
-                            data-item-image="https://i.ibb.co/7dbyYgPy/glitch-nordic-mockup.png">
-                            Ajouter au panier
-                        </button>
+                <div class="pt-4 flex justify-between items-start">
+                    <div>
+                        <h3 class="font-bold text-sm tracking-tight">T-Shirt "Motion Block"</h3>
+                        <p class="text-xs text-neutral-500 mt-0.5">10 000 FCFA</p>
                     </div>
+                    <button class="snipcart-add-item bg-white text-black text-[10px] font-bold uppercase px-3 py-2 rounded-none hover:bg-neutral-200 transition-all cursor-pointer"
+                        data-item-id="nordic-motion-block" data-item-name="T-Shirt Motion Block" data-item-price="10000" data-item-url="/" data-item-image="images/motion.png">
+                        Prendre
+                    </button>
                 </div>
             </div>
 
-            <div class="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden group hover:border-neutral-700 transition-all duration-300">
-                <div class="aspect-square bg-white flex items-center justify-center p-4 overflow-hidden relative">
-                    <img src="https://i.ibb.co/v4S8L8T7/jesus-mockup.png" alt="T-shirt King Jesus" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
-                    <span class="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold uppercase px-3 py-1 rounded-full">🔥 Focus</span>
+            <div class="group flex flex-col justify-between">
+                <div class="aspect-square bg-neutral-900 overflow-hidden relative rounded-sm">
+                    <img src="images/jesus.png" alt="T-shirt King Jesus" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold tracking-tight">T-Shirt "King Jesus"</h3>
-                    <p class="text-neutral-400 text-sm mt-1">Portrait contrasté rouge au dos et message fort à l'avant.</p>
-                    <div class="mt-6 flex items-center justify-between">
-                        <span class="text-2xl font-black tracking-tight">10 000 FCFA</span>
-                        <button class="snipcart-add-item bg-white text-black px-5 py-3 rounded-xl font-black text-xs uppercase hover:bg-neutral-200 transition-all"
-                            data-item-id="nordic-king-jesus"
-                            data-item-name="T-Shirt King Jesus"
-                            data-item-price="10000"
-                            data-item-url="/"
-                            data-item-description="T-shirt blanc imprimé rouge sang et typographie texturée noire."
-                            data-item-image="https://i.ibb.co/v4S8L8T7/jesus-mockup.png">
-                            Ajouter au panier
-                        </button>
+                <div class="pt-4 flex justify-between items-start">
+                    <div>
+                        <h3 class="font-bold text-sm tracking-tight">T-Shirt "King Jesus"</h3>
+                        <p class="text-xs text-neutral-500 mt-0.5">10 000 FCFA</p>
                     </div>
+                    <button class="snipcart-add-item bg-white text-black text-[10px] font-bold uppercase px-3 py-2 rounded-none hover:bg-neutral-200 transition-all cursor-pointer"
+                        data-item-id="nordic-king-jesus" data-item-name="T-Shirt King Jesus" data-item-price="10000" data-item-url="/" data-item-image="images/jesus.png">
+                        Prendre
+                    </button>
                 </div>
             </div>
 
         </div>
     </main>
 
-    <footer class="border-t border-neutral-800 py-12 text-center text-sm text-neutral-500">
-        <p class="font-bold text-neutral-400 tracking-widest uppercase mb-2">NØRD!C 👿</p>
-        <p>&copy; 2026. Créé pour l'Admin officiel. Tous droits réservés.</p>
+    <section class="bg-neutral-950 border-t border-neutral-900 py-16 px-4 text-center">
+        <div class="max-w-2xl mx-auto">
+            <span class="text-xs font-mono tracking-widest text-neutral-600 uppercase">In Loving Memory Of</span>
+            <h2 class="text-2xl font-serif tracking-wide font-light text-neutral-300 mt-2 mb-4">GNAGRE ANDRÉ</h2>
+            <p class="text-sm text-neutral-500 italic font-light leading-relaxed">
+                "À l'esprit brillant caché derrière les premiers croquis, à l'audace et à la créativité pure qui ont donné naissance à l'âme de cette marque. Ton art et ta vision continuent de vivre à travers chaque pièce et chaque détail de 𝐍𝑂𝐑𝐷𝐈𝐂. Repose en paix, jeune roi."
+            </p>
+            <div class="text-[10px] font-mono text-neutral-700 uppercase tracking-widest mt-6">Forever Creator • 𝐍-𝐃</div>
+        </div>
+    </section>
+
+    <footer class="bg-black py-8 text-center text-xs text-neutral-600 border-t border-neutral-950">
+        <p>&copy; 2026 𝐍𝑂𝐑𝐷𝐈𝐂 👿. All rights reserved.</p>
     </footer>
 
     <script async src="https://cdn.snipcart.com/themes/v3.4.1/default/snipcart.js"></script>
@@ -212,3 +178,6 @@
 
 </body>
 </html>
+
+
+    
