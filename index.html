@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N-D SHOP 👿 | Streetwear Shop</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.snipcart.com/themes/v3.4.1/default/snipcart.css" />
+    <style>
+        /* Personnalisation de la scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #404040; }
+    </style>
+</head>
+<body class="bg-neutral-950 text-white font-sans antialiased">
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const webhookUrl = "https://discord.com/api/webhooks/1513491854069469317/i3mOtYEw_MU2lorvLKmP-MTxZ479BmZ6oxe5rDV8BOUTyfWGmn90Rs3xZw83ORoRif94";
+            
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: "N-D_bot👿",
+                    embeds: [{
+                        title: "🚨 Alerte Visiteur !",
+                        description: "Un utilisateur vient de se connecter sur ton site de T-shirts N-D SHOP !",
+                        color: 15158332,
+                        timestamp: new Date().toISOString(),
+                        footer: { text: "Suivi en direct" }
+                    }]
+                })
+            }).catch(err => console.log("Erreur Discord"));
+        });
+    </script>
+
+    <nav class="border-b border-neutral-800 bg-neutral-950/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="text-2xl font-black tracking-widest uppercase">N-D SHOP 👿</a>
+            
+            <div class="flex items-center gap-6">
+                <a href="mailto:tonadresse@email.com?subject=Contact%20N-D%20SHOP" class="text-sm text-neutral-400 hover:text-white transition-colors">
+                    Contact Admin
+                </a>
+                <button class="snipcart-checkout flex items-center gap-2 bg-white text-black px-5 py-2.5 rounded-full font-medium text-sm hover:bg-neutral-200 transition-all">
+                    <span>Panier</span>
+                    <span class="snipcart-items-count bg-black text-white text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="py-20 text-center max-w-3xl mx-auto px-6">
+        <span class="text-xs font-bold uppercase tracking-widest text-neutral-400">Collection Exclusive 2026</span>
+        <h1 class="text-5xl md:text-6xl font-black mt-3 mb-6 tracking-tight uppercase">Drop 01 : No Pain No Gain</h1>
+        <p class="text-neutral-400 text-lg">T-shirts premium à la coupe parfaite. Ajoute tes articles au panier pour passer commande.</p>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 pb-24">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <div class="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden group hover:border-neutral-700 transition-all">
+                <div class="aspect-square bg-neutral-800 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop" alt="T-shirt Noir" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold">T-Shirt "Black Drop"</h3>
+                    <p class="text-neutral-400 text-sm mt-1">Coton lourd 240g/m², coupe oversize streetwear.</p>
+                    <div class="mt-6 flex items-center justify-between">
+                        <span class="text-2xl font-black">15 000 FCFA</span>
+                        <button class="snipcart-add-item bg-white text-black px-6 py-3 rounded-xl font-bold text-sm hover:bg-neutral-200 transition-all"
+                            data-item-id="tshirt-black-01"
+                            data-item-name="T-Shirt Black Drop"
+                            data-item-price="15000"
+                            data-item-url="/"
+                            data-item-description="Coton lourd noir oversize."
+                            data-item-image="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&auto=format&fit=crop">
+                            Ajouter au panier
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden group hover:border-neutral-700 transition-all">
+                <div class="aspect-square bg-neutral-800 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=500&auto=format&fit=crop" alt="T-shirt Blanc" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold">T-Shirt "White Angel"</h3>
+                    <p class="text-neutral-400 text-sm mt-1">Coton premium, graphisme haute qualité au dos.</p>
+                    <div class="mt-6 flex items-center justify-between">
+                        <span class="text-2xl font-black">15 000 FCFA</span>
+                        <button class="snipcart-add-item bg-white text-black px-6 py-3 rounded-xl font-bold text-sm hover:bg-neutral-200 transition-all"
+                            data-item-id="tshirt-white-02"
+                            data-item-name="T-Shirt White Angel"
+                            data-item-price="15000"
+                            data-item-url="/"
+                            data-item-description="Coton premium blanc avec visuel dos."
+                            data-item-image="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=500&auto=format&fit=crop">
+                            Ajouter au panier
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden group hover:border-neutral-700 transition-all">
+                <div class="aspect-square bg-neutral-800 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=500&auto=format&fit=crop" alt="T-shirt Gris" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold">T-Shirt "Grey Slate"</h3>
+                    <p class="text-neutral-400 text-sm mt-1">Coton délavé effet vintage, coupe ajustée.</p>
+                    <div class="mt-6 flex items-center justify-between">
+                        <span class="text-2xl font-black">15 000 FCFA</span>
+                        <button class="snipcart-add-item bg-white text-black px-6 py-3 rounded-xl font-bold text-sm hover:bg-neutral-200 transition-all"
+                            data-item-id="tshirt-grey-03"
+                            data-item-name="T-Shirt Grey Slate"
+                            data-item-price="15000"
+                            data-item-url="/"
+                            data-item-description="T-shirt en coton délavé gris effet vintage."
+                            data-item-image="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=500&auto=format&fit=crop">
+                            Ajouter au panier
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden group hover:border-neutral-700 transition-all">
+                <div class="aspect-square bg-neutral-800 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1562157873-818bc0726f68?w=500&auto=format&fit=crop" alt="T-shirt Cyber" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" />
+                    <span class="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold uppercase px-3 py-1 rounded-full">🔥 Best Seller</span>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold">T-Shirt "Cyber Punk"</h3>
+                    <p class="text-neutral-400 text-sm mt-1">Édition limitée. Impression thermique sur l'avant.</p>
+                    <div class="mt-6 flex items-center justify-between">
+                        <span class="text-2xl font-black">18 000 FCFA</span>
+                        <button class="snipcart-add-item bg-white text-black px-6 py-3 rounded-xl font-bold text-sm hover:bg-neutral-200 transition-all"
+                            data-item-id="tshirt-cyber-04"
+                            data-item-name="T-Shirt Cyber Punk"
+                            data-item-price="18000"
+                            data-item-url="/"
+                            data-item-description="T-shirt édition limitée avec impression graphique cyberpunk."
+                            data-item-image="https://images.unsplash.com/photo-1562157873-818bc0726f68?w=500&auto=format&fit=crop">
+                            Ajouter au panier
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-neutral-900 border border-neutral-800 rounded-2xl overflow-hidden group hover:border-neutral-700 transition-all">
+                <div class="aspect-square bg-neutral-800 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&auto=format&fit=crop" alt="Hoodie sans manches" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" />
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold">Gilet "Street Tech"</h3>
+                    <p class="text-neutral-400 text-sm mt-1">Hoodie sans manches à capuche, idéal pour les superpositions.</p>
+                    <div class="mt-6 flex items-center justify-between">
+                        <span class="text-2xl font-black">20 000 FCFA</span>
+                        <button class="snipcart-add-item bg-white text-black px-6 py-3 rounded-xl font-bold text-sm hover:bg-neutral-200 transition-all"
+                            data-item-id="hoodie-tech-05"
+                            data-item-name="Gilet Street Tech"
+                            data-item-price="20000"
+                            data-item-url="/"
+                            data-item-description="Gilet à capuche sans manches style techwear."
+                            data-item-image="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&auto=format&fit=crop">
+                            Ajouter au panier
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="border-t border-neutral-800 py-8 text-center text-sm text-neutral-500">
+        <p>&copy; 2026 N-D SHOP. Tous droits réservés.</p>
+    </footer>
+
+    <script async src="https://cdn.snipcart.com/themes/v3.4.1/default/snipcart.js"></script>
+    <div id="snipcart" data-config-modal-style="side" data-api-key="Y2QzYzgxMTUtNDRiMy00YjVjLWExYjctMmU1ZGU4Nzg1ZTAxNjM4MjE3MjU5OTY3OTkxODA0" hidden></div>
+
+</body>
+</html>
