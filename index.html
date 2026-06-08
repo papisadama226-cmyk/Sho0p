@@ -4,18 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>𝐍𝑂𝐑𝐷𝐈𝐂 👿 | Official Store</title>
-    
-    <meta name="theme-color" content="#000000">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="NORDIC">
-    
-    <link rel="manifest" href="data:application/manifest+json,{'name':'NORDIC Official Store','short_name':'NORDIC','start_url':'.','display':'standalone','background_color':'#000000','theme_color':'#000000','icons':[{'src':'logo.png.JPG','sizes':'512x512','type':'image/jpeg'}]}">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-track { background: #000; }
         ::-webkit-scrollbar-thumb { background: #262626; border-radius: 2px; }
     </style>
 </head>
@@ -24,247 +16,74 @@
     <script>
         const discordWebhookUrl = "https://discord.com/api/webhooks/1513491854069469317/i3mOtYEw_MU2lorvLKmP-MTxZ479BmZ6oxe5rDV8BOUTyfWGmn90Rs3xZw83ORoRif94";
         const adminWhatsApp = "2250702797128"; 
-
         let panier = [];
-
-        window.addEventListener('DOMContentLoaded', () => {
-            fetch(discordWebhookUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    username: "N-D_bot👿",
-                    embeds: [{
-                        title: "🚨 Alerte Visiteur !",
-                        description: "Un utilisateur vient d'arriver sur le site NORDIC !",
-                        color: 0,
-                        timestamp: new Date().toISOString()
-                    }]
-                })
-            }).catch(err => console.log("Erreur Discord"));
-            majInterfacePanier();
-        });
 
         function ajouterAuPanier(id, nom, prix) {
             const articleExistant = panier.find(item => item.id === id);
-            if (articleExistant) {
-                articleExistant.quantite += 1;
-            } else {
-                panier.push({ id, nom, prix, quantite: 1 });
-            }
+            if (articleExistant) articleExistant.quantite += 1;
+            else panier.push({ id, nom, prix, quantite: 1 });
             majInterfacePanier();
-            ouvrirModalPanier(); 
-        }
-
-        function modifierQuantite(id, delta) {
-            const article = panier.find(item => item.id === id);
-            if (article) {
-                article.quantite += delta;
-                if (article.quantite <= 0) {
-                    panier = panier.filter(item => item.id !== id);
-                }
-            }
-            majInterfacePanier();
-        }
-
-        function majInterfacePanier() {
-            const totalArticles = panier.reduce((total, item) => total + item.quantite, 0);
-            document.getElementById('panier-count').innerText = totalArticles;
-            
-            const listePanierHtml = document.getElementById('liste-panier');
-            const formulaireLivraison = document.getElementById('formulaire-livraison');
-            
-            if (listePanierHtml) {
-                if (panier.length === 0) {
-                    listePanierHtml.innerHTML = '<p class="text-neutral-500 text-xs italic text-center py-6">Votre panier est vide.</p>';
-                    document.getElementById('bouton-valider-panier').style.display = 'none';
-                    if (formulaireLivraison) formulaireLivraison.classList.add('hidden');
-                } else {
-                    document.getElementById('bouton-valider-panier').style.display = 'block';
-                    if (formulaireLivraison) formulaireLivraison.classList.remove('hidden');
-                    
-                    let html = '';
-                    let totalGlobal = 0;
-                    
-                    panier.forEach(item => {
-                        const sousTotal = item.prix * item.quantite;
-                        totalGlobal += sousTotal;
-                        html += `
-                            <div class="flex justify-between items-center border-b border-neutral-900 py-2.5 text-xs">
-                                <div>
-                                    <p class="font-bold text-white">${item.nom}</p>
-                                    <p class="text-[10px] text-neutral-400">${item.prix.toLocaleString()} FCFA</p>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <div class="flex items-center border border-neutral-800 rounded bg-black">
-                                        <button onclick="modifierQuantite('${item.id}', -1)" class="px-1.5 py-0.5 text-neutral-400 hover:text-white font-bold cursor-pointer">-</button>
-                                        <span class="px-1 text-[10px] font-mono">${item.quantite}</span>
-                                        <button onclick="modifierQuantite('${item.id}', 1)" class="px-1.5 py-0.5 text-neutral-400 hover:text-white font-bold cursor-pointer">+</button>
-                                    </div>
-                                    <span class="font-black text-white text-right min-w-[65px]">${sousTotal.toLocaleString()} FCFA</span>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    
-                    html += `
-                        <div class="flex justify-between items-center pt-3 font-black text-sm border-t border-neutral-800 mt-2">
-                            <span class="text-neutral-400">TOTAL :</span>
-                            <span class="text-white text-base">${totalGlobal.toLocaleString()} FCFA</span>
-                        </div>
-                    `;
-                    listePanierHtml.innerHTML = html;
-                }
-            }
-        }
-
-        function ouvrirModalPanier() {
             document.getElementById('modal-panier').classList.remove('hidden');
         }
 
-        function fermerModalPanier() {
-            document.getElementById('modal-panier').classList.add('hidden');
+        function majInterfacePanier() {
+            document.getElementById('panier-count').innerText = panier.reduce((t, i) => t + i.quantite, 0);
+            const list = document.getElementById('liste-panier');
+            let html = '';
+            panier.forEach(item => {
+                html += `<div class="flex justify-between py-2 text-xs border-b border-neutral-900"><span>${item.nom} (x${item.quantite})</span><span class="font-bold">${(item.prix * item.quantite).toLocaleString()} FCFA</span></div>`;
+            });
+            list.innerHTML = html;
         }
 
         function envoyerCommandeWhatsApp() {
             if (panier.length === 0) return;
-
-            const nomClient = document.getElementById('client-nom').value.trim();
-            const telClient = document.getElementById('client-tel').value.trim();
-            const lieuClient = document.getElementById('client-lieu').value.trim();
-            const repereClient = document.getElementById('client-repere').value.trim();
-
-            if (!nomClient || !telClient || !lieuClient || !repereClient) {
-                alert("⚠️ S'il vous plaît, remplissez toutes vos informations de livraison.");
-                return;
-            }
-
-            let totalGlobal = 0;
-            let texteRecu = `*🧾 REÇU DE COMMANDE - NORDIC 👿*\n`;
-            texteRecu += `------------------------------------------\n\n`;
-            
-            texteRecu += `👤 *CLIENT :* ${nomClient}\n`;
-            texteRecu += `📞 *TEL :* ${telClient}\n`;
-            texteRecu += `📍 *LIEU :* ${lieuClient}\n`;
-            texteRecu += `🗺️ *REPÈRES :* ${repereClient}\n\n`;
-            texteRecu += `------------------------------------------\n`;
-            texteRecu += `🛒 *ARTICLES COMMANDÉS :*\n\n`;
-            
-            panier.forEach(item => {
-                const sousTotal = item.prix * item.quantite;
-                totalGlobal += sousTotal;
-                texteRecu += `• *${item.nom}*\n  Quantité : ${item.quantite} | Prix : ${sousTotal.toLocaleString()} FCFA\n\n`;
-            });
-
-            texteRecu += `------------------------------------------\n`;
-            texteRecu += `*💰 TOTAL GLOBAL : ${totalGlobal.toLocaleString()} FCFA*\n\n`;
-            texteRecu += `_Commande générée depuis la boutique en ligne._`;
-
-            fetch(discordWebhookUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    username: "N-D_bot👿",
-                    embeds: [{
-                        title: "🛒 Nouvelle commande WhatsApp !",
-                        description: `Client: **${nomClient}**\nMontant: **${totalGlobal.toLocaleString()} FCFA**`,
-                        color: 15158332,
-                        timestamp: new Date().toISOString()
-                    }]
-                })
-            }).catch(err => console.log(err));
-
-            const urlWhatsApp = `https://wa.me/${adminWhatsApp}?text=${encodeURIComponent(texteRecu)}`;
-            window.open(urlWhatsApp, '_blank');
-        }
-
-        function essayerExtensionsSuivantes(img, baseName) {
-            const extensions = [
-                baseName + '.png.JPG',
-                baseName + '.png',
-                baseName + '.jpg.JPG',
-                baseName + '.jpg',
-                baseName + '.JPG',
-                'images/' + baseName + '.png.JPG',
-                'images/' + baseName + '.png'
-            ];
-            if (!img.dataset.step) img.dataset.step = "0";
-            let step = parseInt(img.dataset.step);
-            if (step < extensions.length) {
-                img.dataset.step = (step + 1).toString();
-                img.src = extensions[step];
-            }
+            let msg = `*COMMANDE NORDIC 👿*\n\n`;
+            panier.forEach(i => msg += `• ${i.nom} (x${i.quantite})\n`);
+            const url = `https://wa.me/${adminWhatsApp}?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
         }
     </script>
 
-    <nav class="sticky top-0 bg-black border-b border-neutral-900 z-50 h-16 px-6 md:px-12 flex items-center justify-between">
-        <a href="#" class="text-xl font-serif tracking-widest font-black uppercase text-white">NORDIC</a>
-        <div class="flex items-center gap-6 text-neutral-400">
-            <button onclick="ouvrirModalPanier()" class="hover:text-white transition-colors relative flex items-center cursor-pointer">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                <span id="panier-count" class="absolute -top-1.5 -right-2.5 bg-white text-black text-[9px] font-black rounded-full w-4 h-4 flex items-center justify-center">0</span>
-            </button>
-        </div>
+    <nav class="sticky top-0 bg-black border-b border-neutral-900 z-50 h-16 px-6 flex items-center justify-between">
+        <h1 class="text-xl font-black uppercase">NORDIC</h1>
+        <button onclick="document.getElementById('modal-panier').classList.toggle('hidden')" class="relative">🛒<span id="panier-count" class="absolute -top-2 -right-2 bg-white text-black text-[9px] w-4 h-4 rounded-full font-bold">0</span></button>
     </nav>
 
-    <div id="modal-panier" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex justify-end">
-        <div class="bg-neutral-950 w-full max-w-md h-full p-5 border-l border-neutral-900 flex flex-col justify-between overflow-y-auto">
-            <div>
-                <div class="flex justify-between items-center pb-4 border-b border-neutral-900">
-                    <h2 class="text-base font-serif font-black tracking-tight">VOTRE PANIER</h2>
-                    <button onclick="fermerModalPanier()" class="text-neutral-400 hover:text-white font-mono text-xs uppercase cursor-pointer">Fermer</button>
-                </div>
-                <div id="liste-panier" class="mt-2 max-h-[30vh] overflow-y-auto"></div>
-                <div id="formulaire-livraison" class="hidden mt-6 pt-4 border-t border-neutral-900 space-y-3">
-                    <h3 class="text-xs font-mono uppercase tracking-wider text-neutral-400 mb-2">📍 Informations de livraison</h3>
-                    <div><input type="text" id="client-nom" placeholder="Nom & Prénom" class="w-full bg-black border border-neutral-800 rounded px-3 py-2 text-xs text-white"></div>
-                    <div><input type="tel" id="client-tel" placeholder="Numéro WhatsApp" class="w-full bg-black border border-neutral-800 rounded px-3 py-2 text-xs text-white"></div>
-                    <div><input type="text" id="client-lieu" placeholder="Lieu de livraison" class="w-full bg-black border border-neutral-800 rounded px-3 py-2 text-xs text-white"></div>
-                    <div><input type="text" id="client-repere" placeholder="Repères (ex: pharmacie)" class="w-full bg-black border border-neutral-800 rounded px-3 py-2 text-xs text-white"></div>
-                </div>
-            </div>
-            <button id="bouton-valider-panier" onclick="envoyerCommandeWhatsApp()" class="w-full bg-white text-black font-black uppercase py-3.5 tracking-wider text-xs hover:bg-neutral-200 transition-all cursor-pointer">💬 Confirmer & Payer sur WhatsApp</button>
-        </div>
-    </div>
-
-    <header class="py-12 text-center px-4 max-w-xl mx-auto flex flex-col items-center">
-        <h1 class="text-5xl font-serif tracking-widest uppercase mb-4 font-normal">NORDIC</h1>
-        <p class="text-[10px] font-mono tracking-widest uppercase text-neutral-400">NOT FOR EVERYONE. BUT DO IT FOR YOU.</p>
-        <div class="w-12 h-[1px] bg-neutral-800 mt-4"></div>
+    <header class="py-12 text-center px-4">
+        <h1 class="text-5xl font-serif tracking-widest uppercase">NORDIC</h1>
+        <p class="text-[10px] tracking-widest uppercase text-neutral-400 mt-2">NOT FOR EVERYONE. BUT DO IT FOR YOU.</p>
     </header>
 
-    <main class="max-w-5xl mx-auto px-4 pb-24">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            
-            <div class="group bg-neutral-950/50 p-2 border border-neutral-900 rounded-sm flex flex-col justify-between">
-                <img src="roses.png.JPG" class="aspect-square object-contain" onerror="essayerExtensionsSuivantes(this, 'roses')"/>
-                <div class="pt-3"><h3 class="text-xs font-bold truncate">Halftone Roses</h3><p class="text-[10px] text-neutral-400">10 000 FCFA</p></div>
-                <button onclick="ajouterAuPanier('roses', 'Halftone Roses', 10000)" class="w-full bg-white text-black text-[9px] font-black uppercase py-1.5 mt-2">Prendre</button>
-            </div>
-
-            <div class="group bg-neutral-950/50 p-2 border border-neutral-900 rounded-sm flex flex-col justify-between">
-                <img src="godsplan.png.JPG" class="aspect-square object-contain" onerror="essayerExtensionsSuivantes(this, 'godsplan')"/>
-                <div class="pt-3"><h3 class="text-xs font-bold truncate">God's Plan</h3><p class="text-[10px] text-neutral-400">10 000 FCFA</p></div>
-                <button onclick="ajouterAuPanier('godsplan', 'God\'s Plan', 10000)" class="w-full bg-white text-black text-[9px] font-black uppercase py-1.5 mt-2">Prendre</button>
-            </div>
-
-            <div class="group bg-neutral-950/50 p-2 border border-neutral-900 rounded-sm flex flex-col justify-between">
-                <img src="motion.png.JPG" class="aspect-square object-contain" onerror="essayerExtensionsSuivantes(this, 'motion')"/>
-                <div class="pt-3"><h3 class="text-xs font-bold truncate">Motion Block</h3><p class="text-[10px] text-neutral-400">10 000 FCFA</p></div>
-                <button onclick="ajouterAuPanier('motion', 'Motion Block', 10000)" class="w-full bg-white text-black text-[9px] font-black uppercase py-1.5 mt-2">Prendre</button>
-            </div>
-
-            <div class="group bg-neutral-950/50 p-2 border border-neutral-900 rounded-sm flex flex-col justify-between">
-                <img src="jesus.png.JPG" class="aspect-square object-contain" onerror="essayerExtensionsSuivantes(this, 'jesus')"/>
-                <div class="pt-3"><h3 class="text-xs font-bold truncate">King Jesus</h3><p class="text-[10px] text-neutral-400">10 000 FCFA</p></div>
-                <button onclick="ajouterAuPanier('jesus', 'King Jesus', 10000)" class="w-full bg-white text-black text-[9px] font-black uppercase py-1.5 mt-2">Prendre</button>
-            </div>
-
+    <main class="max-w-4xl mx-auto p-4 grid grid-cols-2 gap-4">
+        <div class="border border-neutral-900 p-2">
+            <img src="roses.png.JPG" class="w-full aspect-square object-cover">
+            <h3 class="text-xs font-bold mt-2">Halftone Roses</h3>
+            <button onclick="ajouterAuPanier('roses','Halftone Roses',10000)" class="w-full bg-white text-black py-2 mt-2 font-bold text-xs">PRENDRE</button>
+        </div>
+        <div class="border border-neutral-900 p-2">
+            <img src="godsplan.png.JPG" class="w-full aspect-square object-cover">
+            <h3 class="text-xs font-bold mt-2">God's Plan</h3>
+            <button onclick="ajouterAuPanier('godsplan','God\'s Plan',10000)" class="w-full bg-white text-black py-2 mt-2 font-bold text-xs">PRENDRE</button>
+        </div>
+        <div class="border border-neutral-900 p-2">
+            <img src="motion.png.JPG" class="w-full aspect-square object-cover">
+            <h3 class="text-xs font-bold mt-2">Motion Block</h3>
+            <button onclick="ajouterAuPanier('motion','Motion Block',10000)" class="w-full bg-white text-black py-2 mt-2 font-bold text-xs">PRENDRE</button>
+        </div>
+        <div class="border border-neutral-900 p-2">
+            <img src="jesus.png.JPG" class="w-full aspect-square object-cover">
+            <h3 class="text-xs font-bold mt-2">King Jesus</h3>
+            <button onclick="ajouterAuPanier('jesus','King Jesus',10000)" class="w-full bg-white text-black py-2 mt-2 font-bold text-xs">PRENDRE</button>
         </div>
     </main>
 
-    <footer class="text-center py-10 text-[10px] text-neutral-700 border-t border-neutral-900">
-        &copy; 2026 NORDIC 👿. All rights reserved.
-    </footer>
+    <div id="modal-panier" class="hidden fixed inset-0 bg-black p-6 z-50">
+        <h2 class="font-bold mb-4">PANIER</h2>
+        <div id="liste-panier"></div>
+        <button onclick="envoyerCommandeWhatsApp()" class="w-full bg-white text-black py-4 mt-6 font-bold">CONFIRMER SUR WHATSAPP</button>
+        <button onclick="document.getElementById('modal-panier').classList.add('hidden')" class="text-neutral-500 mt-4 underline text-xs">Fermer</button>
+    </div>
 
 </body>
 </html>
